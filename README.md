@@ -8,5 +8,6 @@
  отнимает значение 'money' от 'balance', возвращает значение "balance". в противном случае возвращает описание ошибки.
  - /putMoney/:id&:money - аналогично takeMoney.
  
- ![image](https://user-images.githubusercontent.com/75555989/200172284-13f5214e-5203-4c1d-a1ed-d8df7d526384.png)
+ 
+![image](https://user-images.githubusercontent.com/75555989/200172333-9802b769-93e3-458a-bb7c-6e58ef10e9fc.png)
 
