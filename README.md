@@ -9,5 +9,5 @@
  - /putMoney/:id&:money - аналогично takeMoney.
  
  
-![image](https://user-images.githubusercontent.com/75555989/200172333-9802b769-93e3-458a-bb7c-6e58ef10e9fc.png)
+![image](https://user-images.githubusercontent.com/75555989/200172349-4f6eeaa3-5ff4-4f7b-b677-2bed07886354.png)
 
