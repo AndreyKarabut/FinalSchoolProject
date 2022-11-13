@@ -1,6 +1,7 @@
 package servlet;
 
 import answer.ErrAnswer;
+import answer.OperationList;
 import com.google.gson.Gson;
 import serviceSQL.ConnectionSQL;
 import serviceSQL.SelectRows;
@@ -8,8 +9,7 @@ import user.User;
 import service.ReadProperty;
 
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class MainServlet {
@@ -105,6 +105,57 @@ public class MainServlet {
         }
 
     }
+
+    public static String getOperationList(String userId, String date1, String date2) throws ClassNotFoundException, SQLException {
+        String dateforreqest1;
+        String dateforreqest2;
+        if(date1.length() == 14) {
+            dateforreqest1 = splitLineIntoPairs(date1);
+        } else {
+            dateforreqest1 = null;
+        }
+        if(date2.length() == 14) {
+            dateforreqest2 = splitLineIntoPairs(date2);
+        } else {
+            dateforreqest2 = null;
+        }
+        Connection connection = takeConnection();
+        ResultSet setAnswer = SelectRows.selectWithOperationList(userId, connection, dateforreqest1, dateforreqest2);
+        StringBuilder answer = new StringBuilder("");
+        Gson gson = new Gson();
+        while (setAnswer.next()) {
+            int operation_id = setAnswer.getInt("operation_id");
+            int user_id  = setAnswer.getInt("user_id");
+            int operation_type = setAnswer.getInt("operation_type");
+            float summary = setAnswer.getFloat("summary");
+            Timestamp date = setAnswer.getTimestamp("date_time");
+            OperationList operationList = new OperationList(operation_id, user_id, operation_type, summary, date);
+            answer.append(gson.toJson(operationList));
+        }
+        if (answer.toString() == ""){
+            String description = "Нет данных по выбранным параметрам";
+            ErrAnswer errAnswer = new ErrAnswer(5, description);
+            return gson.toJson(errAnswer);
+        } else{
+            return answer.toString();
+        }
+
+    }
+    private static String splitLineIntoPairs(String s){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 14 ; i++){
+            stringBuilder.append(s.charAt(i));
+            if (i == 3 || i == 5){
+                stringBuilder.append("-");
+            } else if(i == 7){
+                stringBuilder.append(" ");
+            } else if(i == 9 || i == 11){
+                stringBuilder.append(":");
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     private static Connection takeConnection() throws ClassNotFoundException {
             Properties property = ReadProperty.read("src/main/resources/application.properties");
             if (property == null) {

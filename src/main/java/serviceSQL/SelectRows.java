@@ -26,6 +26,18 @@ public class SelectRows {
         String request = "select takemoney(" + user.getId() + ", " + money +") as balance";
         return getStatements(connection, request);
     }
+    public static ResultSet selectWithOperationList(String userId, Connection connection, String date1, String date2) throws SQLException {
+        String s1 = (date1 == null)? "": "and date_time > timestamp '" + date1 + "'";
+        String s2 = (date2 == null)? "": "and date_time < timestamp '" + date2 + "'";
+        String request = "SELECT * FROM operationlist WHERE user_id = " + userId + s1 + s2 + ";";
+        Statement statement = connection.createStatement();
+        try {
+            return statement.executeQuery(request);
+        } catch (SQLException e){
+            System.out.println(e);
+            return null;
+        }
+    }
 
     private static float getStatements(Connection connection, String request) throws SQLException{
         Statement statement = connection.createStatement();
