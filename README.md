@@ -14,3 +14,8 @@
 13.11.22 добавлена функция "/getOperationList/:userId&date1&date2", где userId - обязательный параметр, date1 / date2 - дата в формате 20221113235959, либо "-" когда ограничение по времени не требуется. 
  
  ![image](https://user-images.githubusercontent.com/75555989/201518430-4b1cad5d-7b21-4bba-a329-877fc9de855b.png)
+ 
+ 19.11.22 добавлена функция /transfer_money/ с 3 параметрами через &, id отправителя, id принимающего, money количество средств;
+ Переработат работа в рамках sql. Теперь записи в таблицу operationlist делаются не через триггеры.
+ 
+![image](https://user-images.githubusercontent.com/75555989/202849378-24b65a42-e82b-4ba5-8f2b-37f9ae4ad44b.png)
