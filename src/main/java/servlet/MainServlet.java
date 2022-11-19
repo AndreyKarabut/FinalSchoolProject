@@ -141,6 +141,7 @@ public class MainServlet {
         }
 
     }
+
     private static String splitLineIntoPairs(String s){
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < 14 ; i++){
@@ -154,6 +155,52 @@ public class MainServlet {
             }
         }
         return stringBuilder.toString();
+    }
+
+    public static String transferMoney(String id_sender, String id_ricipient, String money) throws SQLException, ClassNotFoundException{
+        User user_sender;
+        User user_ricipient;
+        float fmoney;
+        Connection connection = takeConnection();
+        Gson gson = new Gson();
+        ErrAnswer errAnswer;
+
+        try {
+            int id = Integer.parseInt(id_sender);
+            user_sender = new User(id);
+        } catch (NumberFormatException E)
+        {
+            String description = "ОШИБКА: Неверный формат id пользователя (параметр №1)";
+            errAnswer = new ErrAnswer(-1, description);
+            return gson.toJson(errAnswer);
+        }
+        try {
+            int id = Integer.parseInt(id_ricipient);
+            user_ricipient = new User(id);
+        } catch (NumberFormatException E)
+        {
+            String description = "ОШИБКА: Неверный формат id пользователя (параметр №2)";
+            errAnswer = new ErrAnswer(-1, description);
+            return gson.toJson(errAnswer);
+        }
+        try {
+            fmoney = Float.parseFloat(money);
+        } catch (NumberFormatException E){
+            String description = "ОШИБКА: Неверный формат ввода денег";
+            errAnswer = new ErrAnswer(-2, description);
+            return gson.toJson(errAnswer);
+        }
+        String description;
+        int code;
+        if(SelectRows.transferMoney(connection, user_sender.getId(), user_ricipient.getId(), fmoney)){
+            description = "Успешно!";
+            code = 3;
+        }else{
+            description = "Ошибка!";
+            code = -3;
+        }
+        errAnswer = new ErrAnswer(code, description);
+        return gson.toJson(errAnswer);
     }
 
     private static Connection takeConnection() throws ClassNotFoundException {

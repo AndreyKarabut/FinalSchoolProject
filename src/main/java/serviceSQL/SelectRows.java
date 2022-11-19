@@ -19,11 +19,11 @@ public class SelectRows {
     }
 
     public static float selectCallPutMoney(User user, Connection connection, float money) throws SQLException {
-        String request = "select putmoney(" + user.getId() + ", " + money +") as balance;";
+        String request = "select pre_putmoney(" + user.getId() + ", " + money +") as balance;";
         return getStatements(connection, request);
     }
     public static float selectCallTakeMoney(User user, Connection connection, float money) throws SQLException {
-        String request = "select takemoney(" + user.getId() + ", " + money +") as balance";
+        String request = "select pre_takemoney(" + user.getId() + ", " + money +") as balance";
         return getStatements(connection, request);
     }
     public static ResultSet selectWithOperationList(String userId, Connection connection, String date1, String date2) throws SQLException {
@@ -39,6 +39,13 @@ public class SelectRows {
         }
     }
 
+    public static boolean transferMoney(Connection connection, int id_sender, int id_ricipient, float money) throws SQLException {
+        String request = "select transfer_money(" + id_sender + ", " + id_ricipient + ", " + money + ") as result;";
+        return getResult(connection, request);
+            
+    }
+
+
     private static float getStatements(Connection connection, String request) throws SQLException{
         Statement statement = connection.createStatement();
         try {
@@ -52,7 +59,21 @@ public class SelectRows {
             System.out.println(e);
             return 0.0f;
         }
+    }
 
+    private static boolean getResult(Connection connection, String request) throws SQLException {
+        Statement statement = connection.createStatement();
+        try {
+            ResultSet resultSet = statement.executeQuery(request);
+            boolean a = false;
+            while (resultSet.next()){
+                a = resultSet.getBoolean("result");
+            }
+            return a;
+        } catch (SQLException e){
+            System.out.println(e);
+            return false;
+        }
     }
 
 
